@@ -1,10 +1,12 @@
 use docx_rs::*;
 
+use std::env;
 use std::fs::File;
 use std::io::Read;
 
 pub fn main() {
-    let mut file = File::open("./python.docx").unwrap();
+    let file_name = env::args().nth(1).unwrap();
+    let mut file = File::open(&file_name).unwrap();
     let mut buf = vec![];
     file.read_to_end(&mut buf).unwrap();
 
