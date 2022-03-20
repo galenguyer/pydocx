@@ -39,6 +39,8 @@ pub fn main() {
 
     code = code.replace("\u{201c}", "\"");
     code = code.replace("\u{201d}", "\"");
+    code = code.replace("\u{2018}", "\'");
+    code = code.replace("\u{2019}", "\'");
 
     pyo3::prepare_freethreaded_python();
     let py = pyo3::Python::acquire_gil();
