@@ -8,7 +8,7 @@ pub fn main() {
     let mut buf = vec![];
     file.read_to_end(&mut buf).unwrap();
 
-    // let mut file = File::create("./python.json").unwrap();
+    let mut code = String::from("");
     let res = read_docx(&buf).unwrap().document;
     for document_child in res.children {
         match document_child {
@@ -18,12 +18,17 @@ pub fn main() {
                         ParagraphChild::Run(run) => {
                             for run_child in run.children {
                                 match run_child {
-                                    RunChild::Tab(_) => {print!("    ")}
-                                    RunChild::Text(text) => {println!("{}", text.text)}
+                                    RunChild::Tab(_) => {
+                                        code.push_str("    ");
+                                    }
+                                    RunChild::Text(text) => {
+                                        code.push_str(&text.text);
+                                        code.push('\n');
+                                    }
                                     _ => {}
                                 }
                             }
-                        },
+                        }
                         _ => {}
                     }
                 }
@@ -31,6 +36,11 @@ pub fn main() {
             _ => {}
         }
     }
-    // file.write_all(res.as_bytes()).unwrap();
-    // file.flush().unwrap();
+
+    code = code.replace("\u{201c}", "\"");
+    code = code.replace("\u{201d}", "\"");
+
+    pyo3::prepare_freethreaded_python();
+    let py = pyo3::Python::acquire_gil();
+    py.python().run(&code, None, None).unwrap();
 }

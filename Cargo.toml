@@ -7,3 +7,6 @@ edition = "2021"
 
 [dependencies]
 docx-rs = "0.3.4"
+pyo3 = "0.16.2"
+
+[features]
